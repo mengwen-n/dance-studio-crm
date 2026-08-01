@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0f172a" />
+    <title>DanceFlow CRM — Studio Operations</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" id="sidebar">
+        <div class="brand-lockup">
+          <div class="brand-mark">DF</div>
+          <div>
+            <div class="brand-name">DanceFlow</div>
+            <div class="brand-subtitle">STUDIO OPERATIONS</div>
+          </div>
+        </div>
+
+        <div class="workspace-switcher">
+          <div class="workspace-avatar">S</div>
+          <div class="workspace-copy">
+            <strong>Studio Sol</strong>
+            <span>Owner workspace</span>
+          </div>
+          <span class="chevron">⌄</span>
+        </div>
+
+        <nav class="main-nav" aria-label="Main navigation">
+          <div class="nav-label">WORKSPACE</div>
+          <button class="nav-item active" data-page="dashboard">
+            <span class="nav-icon">⌂</span><span>Overview</span>
+          </button>
+          <button class="nav-item" data-page="leads">
+            <span class="nav-icon">↗</span><span>Leads & trials</span><span class="nav-count">6</span>
+          </button>
+          <button class="nav-item" data-page="members">
+            <span class="nav-icon">♧</span><span>Members</span>
+          </button>
+          <button class="nav-item" data-page="attendance">
+            <span class="nav-icon">✓</span><span>Attendance</span>
+          </button>
+          <button class="nav-item" data-page="automations">
+            <span class="nav-icon">✦</span><span>Automations</span><span class="nav-dot"></span>
+          </button>
+
+          <div class="nav-label secondary-label">MANAGE</div>
+          <button class="nav-item" data-page="reports">
+            <span class="nav-icon">▥</span><span>Reports</span>
+          </button>
+          <button class="nav-item" data-page="settings">
+            <span class="nav-icon">⚙</span><span>Settings</span>
+          </button>
+        </nav>
+
+        <div class="sidebar-bottom">
+          <div class="upgrade-card">
+            <div class="upgrade-spark">✦</div>
+            <strong>Low-cost setup</strong>
+            <p>Ready for Google Sheets + Apps Script</p>
+            <button class="text-button" data-page="automations">View playbook <span>→</span></button>
+          </div>
+          <div class="sidebar-footer">
+            <div class="avatar avatar-small">MW</div>
+            <div class="user-copy"><strong>Studio admin</strong><span>admin@studiosol.my</span></div>
+            <span class="more">•••</span>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <header class="topbar">
+          <button class="mobile-menu" id="mobileMenu" aria-label="Open navigation">☰</button>
+          <div class="breadcrumbs"><span>Studio Sol</span><span class="breadcrumb-separator">/</span><strong id="breadcrumbCurrent">Overview</strong></div>
+          <div class="topbar-actions">
+            <label class="search-box">
+              <span>⌕</span>
+              <input id="globalSearch" type="search" placeholder="Search anything..." aria-label="Search" />
+              <kbd>⌘ K</kbd>
+            </label>
+            <button class="icon-button notification-button" id="notificationButton" aria-label="Notifications"><span>♧</span><i></i></button>
+            <div class="avatar">MW</div>
+          </div>
+        </header>
+
+        <div class="page-container" id="pageContainer"></div>
+      </main>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite">
+      <span class="toast-icon">✓</span><span id="toastMessage">Automation completed</span>
+    </div>
+
+    <div class="modal-backdrop" id="leadModal" aria-hidden="true">
+      <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <div class="modal-header"><div><span class="eyebrow">QUICK CAPTURE</span><h2 id="modalTitle">Add a new lead</h2></div><button class="close-button" data-close-modal aria-label="Close">×</button></div>
+        <p class="modal-intro">Capture the enquiry now. The follow-up automation will take it from here.</p>
+        <form id="leadForm">
+          <div class="form-grid">
+            <label>Full name<input name="name" required placeholder="e.g. Aisha Rahman" /></label>
+            <label>Phone number<input name="phone" required placeholder="+60 12 345 6789" /></label>
+            <label>Interested in<select name="interest"><option>Adult Beginner</option><option>Kids Ballet</option><option>Hip Hop</option><option>Private coaching</option></select></label>
+            <label>Trial date<input name="trial" type="date" required /></label>
+          </div>
+          <label>Notes<textarea name="notes" rows="3" placeholder="Any context from WhatsApp or walk-in..."></textarea></label>
+          <div class="form-actions"><button type="button" class="button button-ghost" data-close-modal>Cancel</button><button class="button button-primary" type="submit">Save lead <span>→</span></button></div>
+        </form>
+      </div>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
