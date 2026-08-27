@@ -1,0 +1,34 @@
+Tab_Name,Module_Code,Owner_Facing,When_Disabled
+START_HERE,CORE,TRUE,Always visible
+Settings,CORE,TRUE,Always visible
+Feature_Flags,CORE,TRUE,Always visible
+Members,CORE,TRUE,Keep available
+Member_Types,CORE,FALSE,Keep available
+Member_Type_History,CORE,FALSE,Keep available
+Leads,CORE,TRUE,Keep available
+Lead_Status_History,CORE,FALSE,Keep available
+Packages,CORE,TRUE,Keep available
+Member_Packages,CORE,FALSE,Keep available
+Member_Charges,CORE,TRUE,Keep available
+Payments,CORE,TRUE,Keep available
+Credit_Ledger,CORE,FALSE,Keep available
+Classes,RECURRING_CLASSES,TRUE,Hide or leave unused
+Class_Sessions,RECURRING_CLASSES,TRUE,Hide or leave unused
+Attendance,CORE,TRUE,Keep available
+Rooms,CORE,TRUE,Keep available
+Room_Bookings,RENTAL,TRUE,Hide or leave unused
+Crew_Groups,INHOUSE_CREW,TRUE,Hide or leave unused
+Member_Crew_Assignments,INHOUSE_CREW,FALSE,Hide or leave unused
+Crew_DEPRECATED,INHOUSE_CREW,FALSE,Always hidden; use Members and crew assignments
+Events,EVENTS,TRUE,Hide or leave unused
+Event_Rosters,EVENTS,FALSE,Hide or leave unused
+Event_Sessions,EVENTS,FALSE,Hide or leave unused
+Follow_ups,FOLLOW_UPS,TRUE,Keep available
+Class_Fees,CORE,FALSE,Keep available
+Fee_History,CORE,FALSE,Keep available
+Coach_Payout_Rules,COACH_PAYROLL,FALSE,Hide or leave unused
+Coach_Payout,COACH_PAYROLL,FALSE,Hide or leave unused
+Monthly_Report,CORE,TRUE,Keep available
+User_Roles,CORE,FALSE,Keep available
+Automation_Rules,CORE,FALSE,Keep available
+Automation_Log,CORE,FALSE,Keep available

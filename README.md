@@ -1,61 +1,94 @@
-# DanceFlow CRM Demo
+# Dance Studio CRM
 
-一个面向舞蹈工作室老板的低成本 CRM demo。它把最容易遗漏、但最影响收入的日常工作集中在一个运营工作台里：
+Low-cost Google Sheets and Apps Script CRM/automation template for dance studios. The active studio implementation is **The Wolves Dance Academy**. The Google Sheet is the private operating backend; this repository stores reusable templates, business rules, Apps Script source, and fictional test data only.
 
-- Leads & trials：记录新咨询、试课、来源和下一次跟进
-- Members：查看会员状态、出勤率和即将续费的人
-- Attendance：课堂签到和缺席跟进
-- Automations：试课后跟进、续费预警、签到同步和老板日报
-- Reports：把零散数据变成老板每天可以执行的下一步
+## Current implementation status
 
-## Business documentation
+### Done and tested in the Wolves workbook
 
-这个项目不只有 UI demo，业务和可落地方案也已经记录在：
+- Standard Google Sheets backend with controlled dropdowns, IDs, feature controls, owner-facing `START_HERE`, and operational tabs.
+- Lead, member, crew, package, payment, entitlement, attendance, room booking, event, follow-up, automation-log, and change-log data structure.
+- Wolves-specific pricing and membership rules, including public/in-house packages, trials, walk-ins, in-house registration and rest periods.
+- V1 attendance package-credit deduction, including ledger entries, earliest-expiring entitlement selection, and duplicate protection.
+- V2 paid package payment -> entitlement creation.
+- V2.1 important-field audit entries in `Change_Log`.
+- V3 daily expiry/exhausted package maintenance.
+- V4 trial-attended follow-up creation.
+- V5 room conflict detection: Yang is exclusive; Yin allows up to three concurrent crew-practice teams only when no class/rental/exclusive booking overlaps.
+- V6 `Class_Sessions` -> linked `Room_Bookings` sync. Cancelling a fixed class releases the room and can confirm an otherwise-free pending crew booking.
+- V7 fixed-class session generation exactly seven days ahead. Fixed classes default to `ROOM-YANG`; generated sessions create their linked fixed-class booking through V6.
+- V8 monthly in-house fee generation is implemented locally and ready for a fictional September test; it creates RM80 charges or RM0 waived rest records based on the workbook settings.
+- V8.1 in-house rest lifecycle is implemented locally: it applies approved rest start/end dates to member and request statuses.
+- V9 lead conversion is implemented locally: a converted lead creates or links one member while blocking possible phone/email duplicates for review.
+- V10 walk-in attendance charge is implemented locally: eligible fixed-class attendance creates exactly one pending RM40 public-member or RM45 non-member charge. In-house crew is flagged to buy the in-house credit package instead.
+- V11 walk-in payment reconciliation is implemented locally: a matching paid payment marks its linked V10 charge and attendance as Paid. It blocks missing, duplicate, or wrong-amount payments for review.
+- V12 trial attendance validation is tested in the Wolves workbook: a paid RM100 seven-day trial permits only eligible Fixed-class attendance and never deducts credits.
+- Date display in `Class_Sessions.Session_Date` is standardized to `yyyy-mm-dd`.
 
-- [Business Plan](docs/00_BUSINESS_PLAN.md)
-- [Business Requirements](01_Dance_Studio/BRD.md)
-- [Business Rules Register](01_Dance_Studio/Business_Rules.md)
-- [Google Sheets Design](01_Dance_Studio/Google_Sheets_Design.md)
-- [Google Form Specification](01_Dance_Studio/Google_Form_Spec.md)
-- [Process Flow](01_Dance_Studio/Process_Flow.md)
-- [Automation Playbook](01_Dance_Studio/Automation_Playbook.md)
-- [Implementation Roadmap](01_Dance_Studio/Implementation_Roadmap.md)
+### Confirmed studio operating rules
 
-`AGENTS.md` 是这个项目给 AI 和开发者的协作规则；它不是 business plan，而是保证以后扩展时不破坏业务方向。
+- Fixed recurring classes use **Yang** by default.
+- Yin: 480 sq ft / around 10 people. RM40 hourly, RM100 for first 3 hours, then RM20 per following hour.
+- Yang: 1,000 sq ft / 20+ people. RM60 hourly, RM150 for first 3 hours, then RM30 per following hour.
+- In-house studio fee: RM80 per active calendar month; approved rest is RM0 and must be requested before the 20th for the following month. Rest is not an exit.
+- In-house registration: RM120 in January-June, RM60 in July-December; no new registration charge after approved rest.
+- In-house packages: RM50 / 4 credits / 30 days; RM100 / 8 credits / 60 days; RM150 / 12 credits / 90 days.
+- Public packages: RM140 / 4 credits / 30 days; RM250 / 8 credits / 60 days; RM330 / 12 credits / 90 days.
+- Public member walk-in is RM40; non-member is RM45. In-house members without credits buy the in-house 4-credit package.
+- First-time trial: RM100, valid for seven consecutive days from payment date; unlimited regular fixed classes only (not pop classes/workshops).
 
-## 本地打开
+### Still to do / needs owner confirmation before enabling
 
-这是一个无构建工具的静态 demo，直接双击 `index.html` 即可打开。也可以在项目目录运行：
+- Verify every recurring class coach, capacity, and timetable against the current studio schedule.
+- Confirm Yang's exact maximum capacity and any booking buffer/cleaning time.
+- Set the V7 automation rule to `TRUE`, manually test `runSevenDayClassSessionGenerator`, then install its one daily trigger.
+- Build staff-facing Google Forms or a simple front-end for leads, attendance, payments, rentals, and crew booking.
+- Add owner notifications/reminders (WhatsApp/email) only after the preferred channel, message content, and recipient list are confirmed.
+- Define event/show workflow details: client quotation, dancer payment, transport, costume, deposits, and approval process.
+- Add reporting/dashboard views after live operating data exists.
+- Protect technical/history tabs and define staff roles before production use.
 
-```powershell
-python -m http.server 4173
-```
+## Automation versions
 
-然后打开 <http://localhost:4173>。
+| Version | Purpose | Trigger |
+| --- | --- | --- |
+| V1 | Attendance -> credit deduction and ledger | Shared on-edit trigger |
+| V2 | Paid package payment -> entitlement | Shared on-edit trigger |
+| V2.1 | Important changes -> audit history | Shared on-edit trigger |
+| V3 | Expired/exhausted package maintenance | Daily trigger |
+| V4 | Trial-attended lead -> follow-up | Shared on-edit trigger |
+| V5 | Room conflict checks | Shared on-edit trigger |
+| V6 | Class session -> fixed room booking | Shared on-edit trigger |
+| V7 | Create fixed sessions seven days ahead | Daily trigger |
+| V8 | In-house monthly fee and approved-rest handling | Daily trigger |
+| V8.1 | Approved rest start/end status lifecycle | V8 daily trigger |
+| V9 | Converted lead -> linked member | Shared on-edit trigger |
+| V10 | Eligible walk-in attendance -> pending charge | Shared on-edit trigger |
+| V11 | Paid walk-in payment -> linked charge and attendance marked Paid | Shared on-edit trigger |
+| V12 | Paid seven-day trial -> eligible Fixed-class attendance validation | Shared on-edit trigger |
 
-所有演示数据保存在浏览器 `localStorage`，所以新增 lead、自动化日志和签到状态会在刷新后保留。点击左侧菜单和页面内的按钮，可以完整演示一个老板日常工作流。
+Use the `Automation_Rules` tab as the per-workbook on/off control. No deployment is needed for ordinary Apps Script code or trigger updates.
 
-## 低成本落地方案
+## Repository structure
 
-第一阶段不需要做复杂后端：
+- `01_Dance_Studio/` — reusable, neutral dance-studio template and business rules.
+- `02_The_Wolves_Dance_Academy/` — Wolves-specific rules, plan, feature flags, and reference material.
+- `google-sheets/` — workbook schema and setup notes.
+- `apps-script/` — modular Apps Script source and local smoke test.
+- `skills/the-wolves-dance-academy/` — reusable studio-context skill for future work.
+- `config/` — neutral CSV templates for IDs, tabs, validation, and feature controls.
 
-```text
-Google Form / WhatsApp
-          ↓
-Google Sheets（Leads / Members / Attendance）
-          ↓
-Apps Script（触发器 + Email / WhatsApp link / Daily digest）
-          ↓
-Looker Studio 或这个前端 Demo
-```
+## Apps Script setup
 
-推荐先接入 4 个 Apps Script 流程：
+Add all files in `apps-script/` to **one** Apps Script project attached to the Wolves workbook. Keep exactly one installable on-edit trigger: `onAttendanceEdit`.
 
-1. 新 lead 写入表格后，自动生成 Lead ID 和 follow-up date。
-2. 试课结束两小时后，自动提醒 staff 跟进。
-3. 会员到期前 7 天，把续费名单发给老板。
-4. 每天早上 9 点发送收入、试课、出勤和异常事项摘要。
+- Run `resetAllAttendanceEditTriggers` only when repairing the shared on-edit trigger.
+- Run `installPackageMaintenanceTrigger` once for V3.
+- Run `installSevenDayClassSessionTrigger` once only after V7 has passed a manual test.
+- Do not create a deployment for these spreadsheet automations.
 
-## 下一步
+See [apps-script/README.md](apps-script/README.md) for test and fallback details.
 
-这个 demo 的重点是让老板先看到价值，再决定是否接真实数据。下一步可以把 `app.js` 里的 seed data 替换成 Google Sheets API 或 Apps Script Web App，并保留现有页面和自动化操作流程。
+## Privacy
+
+Do not place real member names, phone numbers, payment records, or Google Sheet links in this repository. Use fictional test data only.

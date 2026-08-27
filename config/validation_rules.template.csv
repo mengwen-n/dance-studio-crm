@@ -1,0 +1,18 @@
+Area,Column_or_Field,Field_Type,Allowed_Values_or_Rule,Required,Notes
+Feature_Flags,Enabled,Dropdown,TRUE|FALSE,TRUE,Reject other values
+Feature_Flags,Owner_View,Dropdown,Show|Hide,TRUE,Reject other values
+Member_Types,Default_Payment_Rule,Dropdown,Package or walk-in|Crew rule|Monthly studio + annual registration + class credits|Trial rule|Free|Custom,FALSE,Default only; amount due is recorded in Member_Charges and money received in Payments
+Member_Type_History,Reason,Dropdown,Joined_Crew|Left_Crew|Converted_From_Trial|Direct_Signup|Walk_In|Admin_Correction|Other,TRUE,Reason code; add detail in Notes
+Leads,Interest,Dropdown,Foundation|Pop-up|Workshop|Private|In-house Crew|External Show|Studio Rental|Other,FALSE,Primary interest; use Notes for multiple interests
+Assigned_To fields,Assigned_To,Reference,User_Roles.Email,FALSE,Store user email so automation can identify staff
+All tables,Record_ID,Generated ID,Unique prefix plus sequence,TRUE,Never type random IDs manually
+All tables,Created_At,Date/time,Valid date/time,TRUE,Use system timestamp where possible
+Members,Member_Type,Dropdown,Public|In_House_Crew|Trial|Walk_In|Inactive,FALSE,Use Member_Types reference list
+Members,Member_Origin,Dropdown,Lead_Conversion|Direct_Signup|Walk_In|Crew_Registration|Existing_Data|Referral,FALSE,Keep origin values consistent
+Attendance,Attendance_Status,Dropdown,Present|Absent|Excused|Late|Cancelled,FALSE,Controlled attendance status
+Payments,Payment_Status,Dropdown,Pending|Paid|Refunded|Voided,FALSE,Controlled payment status
+Member_Charges,Charge_Type,Dropdown,Monthly_Studio_Fee|Annual_Registration|Package_Purchase|Walk_In|Rental|Workshop|Other,TRUE,Controlled charge category
+Member_Charges,Status,Dropdown,Draft|Due|Paid|Waived|Cancelled|Overdue,TRUE,Controlled receivable status
+Member_Charges,Generated_By,Dropdown,Manual|Form|Automation|Import,TRUE,How the charge row was created
+Notes fields,Notes,Free text,No fixed list,FALSE,Free text is allowed here
+Members,Status,Dropdown,active|on_rest|inactive|paused|archived,TRUE,on_rest means notified rest period; keep member history

@@ -1,0 +1,9 @@
+Feature_Code,Enabled,Reason
+CORE,TRUE,Required CRM foundation
+RECURRING_CLASSES,TRUE,Fixed studio timetable
+POPUP_CLASSES,TRUE,Pop-up classes and workshops
+INHOUSE_CREW,TRUE,Lunarize Solarize and DGXT crew workflows
+EVENTS,TRUE,External shows and dancer rosters
+RENTAL,TRUE,Ying and Yang room rental workflow
+FOLLOW_UPS,TRUE,Trial and member reminders
+COACH_PAYROLL,FALSE,Not activated yet

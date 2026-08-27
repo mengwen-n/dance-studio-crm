@@ -1,0 +1,26 @@
+ID_Field,Tab,Prefix_or_Format,Generated_By,Rule
+Member_ID,Members,M-######,Form or Apps Script,One stable ID per person; never reuse
+Lead_ID,Leads,LEAD-######,Form or Apps Script,One enquiry record
+Package_ID,Packages,PKG-######,Admin setup,Package definition not a purchase
+Entitlement_ID,Member_Packages,ENT-######,Payment workflow,One purchased package allocation
+Charge_ID,Member_Charges,CHG-######,Billing workflow,One amount due for a member and billing period
+Payment_ID,Payments,PAY-######,Payment form,One money transaction
+Ledger_ID,Credit_Ledger,LEDGER-######,Automation,One append-only credit movement
+Class_ID,Classes,CLS-######,Admin setup,Reusable class definition
+Session_ID,Class_Sessions,SES-######,Schedule workflow,One dated class session
+Attendance_ID,Attendance,ATT-######,Attendance form,One member attendance record
+Room_ID,Rooms,ROOM-<NAME>,Admin setup,Stable room code such as ROOM-YING
+Booking_ID,Room_Bookings,BOOK-######,Booking form,One room booking
+Crew_Group_ID,Crew_Groups,Mnemonic code,Admin setup,Stable group code such as DGXT
+Assignment_ID,Member_Crew_Assignments,ASSIGN-######,Crew form,One assignment period
+Coach_ID,Coaches,COACH-######,Coach form,One coach profile
+Event_ID,Events,EVT-######,Event form,One external show
+Event_Roster_ID,Event_Rosters,ROSTER-######,Roster form,One dancer assignment
+Event_Session_ID,Event_Sessions,EVENT-SESSION-######,Event schedule,One rehearsal or performance session
+Follow_Up_ID,Follow_ups,FU-######,Automation or staff,One follow-up task
+Fee_ID,Class_Fees,FEE-######,Admin setup,Current fee definition
+Fee_Change_ID,Fee_History,FCHG-######,Fee workflow,One historical fee change
+Payout_Rule_ID,Coach_Payout_Rules,PAYOUTRULE-######,Admin setup,One coach payout rule
+Payout_ID,Coach_Payout,PAYOUT-######,Payout workflow,One coach payout record
+Rule_ID,Automation_Rules,AUTORULE-######,Admin setup,One automation rule
+Run_ID,Automation_Log,RUN-######,Automation,One automation execution log

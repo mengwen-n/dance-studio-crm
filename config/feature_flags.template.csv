@@ -1,0 +1,9 @@
+Feature_Code,Feature_Name,Default_Enabled,Required,Description
+CORE,Basic CRM / members / attendance / payments,TRUE,TRUE,Required for every studio
+RECURRING_CLASSES,Fixed recurring classes,TRUE,FALSE,Weekly timetable and class sessions
+POPUP_CLASSES,Pop-up classes and workshops,TRUE,FALSE,One-off class sessions
+INHOUSE_CREW,In-house crew and crew room access,FALSE,FALSE,Crew groups and internal room bookings
+EVENTS,External shows and dancer rosters,FALSE,FALSE,Outside performances and rehearsals
+RENTAL,Studio rental bookings,FALSE,FALSE,External room rental workflow
+FOLLOW_UPS,Trial and member follow-ups,TRUE,FALSE,Reminder and retention workflow
+COACH_PAYROLL,Coach payout rules and payout records,FALSE,FALSE,Coach payment calculations
