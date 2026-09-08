@@ -209,8 +209,7 @@ function getInHouseFeeSettings_(spreadsheet) {
   const headers = getHeaderMap_(sheet);
   const rows = getRecordsWithId_(sheet, headers, 'Key');
   const valueFor = key => {
-    const row = rows.find(item => asText_(item.values[requiredColumn_(headers, 'Key')]) === key);
-    return row ? row.values[requiredColumn_(headers, 'Value')] : '';
+    return studioSetting_(spreadsheet, key);
   };
   const activeFee = Number(valueFor('InHouse_Studio_Fee_Active'));
   const restFee = Number(valueFor('InHouse_Studio_Fee_Rest'));

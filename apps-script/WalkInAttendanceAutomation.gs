@@ -23,22 +23,18 @@ function processWalkInAttendanceRow_(spreadsheet, attendanceSheet, attendanceHea
   }
 
   try {
-    if (memberType === DANCE_STUDIO_CRM.IN_HOUSE_MEMBER_TYPE) {
-      writeWalkInAutomationLog_(spreadsheet, attendanceId, 'Needs manual action', '', 'In-house members must use an in-house credit package; do not charge the public RM40 walk-in rate.');
-      return;
-    }
-
     const session = getWalkInSession_(spreadsheet, sessionId);
     if (!session) {
       writeWalkInAutomationLog_(spreadsheet, attendanceId, 'Needs manual action', '', `Session ${sessionId} was not found.`);
       return;
     }
-    if (session.status === 'cancelled' || session.classType !== 'Fixed') {
-      writeWalkInAutomationLog_(spreadsheet, attendanceId, 'Needs manual action', '', 'Walk-in pricing only applies to active regular Fixed classes, not cancelled, Pop_Class, or Workshop sessions.');
+    const allowedTypes = studioSetting_(spreadsheet, 'WalkIn_Allowed_Class_Types').split(',').map(value => value.trim());
+    if (session.status === 'cancelled' || !allowedTypes.includes(session.classType)) {
+      writeWalkInAutomationLog_(spreadsheet, attendanceId, 'Needs manual action', '', 'Session is cancelled or its class type is not enabled for walk-in pricing.');
       return;
     }
 
-    const rate = getWalkInRate_(memberType);
+    const rate = getWalkInRate_(spreadsheet, memberType);
     if (!rate) {
       writeWalkInAutomationLog_(spreadsheet, attendanceId, 'Needs manual action', '', `Unsupported walk-in member type: ${memberType || '(blank)'}.`);
       return;
@@ -63,14 +59,12 @@ function processWalkInAttendanceRow_(spreadsheet, attendanceSheet, attendanceHea
   }
 }
 
-function getWalkInRate_(memberType) {
-  if (memberType === DANCE_STUDIO_CRM.PUBLIC_MEMBER_TYPE) {
-    return { amount: 40, packageId: DANCE_STUDIO_CRM.PUBLIC_WALK_IN_PACKAGE_ID };
-  }
-  if (memberType === DANCE_STUDIO_CRM.NON_MEMBER_TYPE) {
-    return { amount: 45, packageId: DANCE_STUDIO_CRM.NON_MEMBER_WALK_IN_PACKAGE_ID };
-  }
-  return null;
+function getWalkInRate_(ss, memberType) {
+  const id = studioSetting_(ss, `WalkIn_Package_${memberType}`);
+  if (id === 'DISABLED') return null;
+  const rate = studioPackage_(ss, id);
+  if (rate.memberType !== memberType) throw new Error(`Configuration: ${id} does not match member type ${memberType}.`);
+  return rate;
 }
 
 function getWalkInSession_(spreadsheet, sessionId) {

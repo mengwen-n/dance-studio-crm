@@ -39,7 +39,7 @@ function processRoomBookingRow_(spreadsheet, sheet, headers, rowNumber) {
   if (!['pending', 'confirmed'].includes(bookingStatus)) return;
 
   const overlaps = findBookingConflicts_(sheet, headers, bookingId, roomId, bookingDate, startMinutes, endMinutes);
-  const conflicts = getRoomBookingConflicts_(roomId, bookingType, overlaps);
+  const conflicts = getRoomBookingConflicts_(studioRoomLimit_(spreadsheet, roomId), bookingType, overlaps);
   const conflictStatus = conflicts.length ? 'Conflict' : 'No conflict';
   const conflictWith = conflicts.map(item => item.bookingId).join(', ');
   const existingStatus = asText_(field('Conflict_Status'));
@@ -145,16 +145,16 @@ function findBookingConflicts_(sheet, headers, bookingId, roomId, bookingDate, s
     .filter(item => startMinutes < item.endMinutes && item.startMinutes < endMinutes);
 }
 
-function getRoomBookingConflicts_(roomId, bookingType, overlaps) {
-  const isSharedYinCrewPractice = roomId === DANCE_STUDIO_CRM.YIN_ROOM_ID && bookingType === DANCE_STUDIO_CRM.CREW_PRACTICE_BOOKING_TYPE;
-  if (!isSharedYinCrewPractice) return overlaps;
+function getRoomBookingConflicts_(maxTeams, bookingType, overlaps) {
+  const isSharedCrewPractice = maxTeams > 1 && bookingType === DANCE_STUDIO_CRM.CREW_PRACTICE_BOOKING_TYPE;
+  if (!isSharedCrewPractice) return overlaps;
 
   const exclusiveOverlaps = overlaps.filter(item => item.bookingType !== DANCE_STUDIO_CRM.CREW_PRACTICE_BOOKING_TYPE);
   if (exclusiveOverlaps.length > 0) return exclusiveOverlaps;
 
   // The incoming booking is included in the maximum. Two existing teams plus
   // this booking equals the allowed three; a third existing team is a conflict.
-  return overlaps.length >= DANCE_STUDIO_CRM.YIN_MAX_SHARED_CREW_TEAMS ? overlaps : [];
+  return overlaps.length >= maxTeams ? overlaps : [];
 }
 
 function bookingDateKey_(value) {

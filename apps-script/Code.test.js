@@ -27,6 +27,7 @@ const sandbox = {
 };
 vm.createContext(sandbox);
 vm.runInContext(fs.readFileSync('apps-script/Config.gs', 'utf8'), sandbox);
+vm.runInContext(fs.readFileSync('apps-script/StudioSettings.gs', 'utf8'), sandbox);
 vm.runInContext(fs.readFileSync('apps-script/AttendanceAutomation.gs', 'utf8'), sandbox);
 vm.runInContext(fs.readFileSync('apps-script/PackageMaintenanceAutomation.gs', 'utf8'), sandbox);
 vm.runInContext(fs.readFileSync('apps-script/RoomBookingAutomation.gs', 'utf8'), sandbox);
@@ -95,23 +96,39 @@ assert.equal(sandbox.endOfMonth_(new savedDate('2026-02-15T10:00:00')).getDate()
 assert.equal(sandbox.startOfMonth_(new savedDate('2026-09-15T10:00:00')).getDate(), 1);
 assert.equal(sandbox.memberTypeFromLeadInterest_('In-house Crew'), 'In_House_Crew');
 assert.equal(sandbox.memberTypeFromLeadInterest_('Foundation'), 'Public');
-assert.equal(sandbox.getWalkInRate_('Public').amount, 40);
-assert.equal(sandbox.getWalkInRate_('Public').packageId, 'PKG-1');
-assert.equal(sandbox.getWalkInRate_('Walk_In').amount, 45);
-assert.equal(sandbox.getWalkInRate_('Walk_In').packageId, 'PKG-WALKIN-NONMEMBER');
-assert.equal(sandbox.getWalkInRate_('In_House_Crew'), null);
+const studio = (price, roomLimit) => ({ getSheetByName: name => ({
+  Settings: mockSheet(['Key', 'Value'], [['WalkIn_Package_Public', 'CUSTOM-WALK'], ['WalkIn_Package_In_House_Crew', 'DISABLED']]),
+  Packages: mockSheet(['Package_ID', 'Price', 'Validity_Days', 'Member_Type', 'Active_Status'], [['CUSTOM-WALK', price, 1, 'Public', 'active']]),
+  Rooms: mockSheet(['Room_ID', 'Max_Shared_Crew_Teams'], [['ROOM-CUSTOM', roomLimit]])
+})[name] });
+assert.equal(sandbox.getWalkInRate_(studio(27, 2), 'Public').amount, 27);
+assert.equal(sandbox.getWalkInRate_(studio(63, 4), 'Public').amount, 63);
+assert.equal(sandbox.getWalkInRate_(studio(27, 2), 'In_House_Crew'), null);
+assert.throws(() => sandbox.getWalkInRate_(studio(27, 2), 'Walk_In'), /Configuration/);
+assert.throws(() => sandbox.getWalkInRate_(studio('', 2), 'Public'), /Configuration/);
+assert.throws(() => sandbox.studioRoomLimit_(studio(27, ''), 'ROOM-CUSTOM'), /Configuration/);
+assert.equal(sandbox.studioRoomLimit_(studio(27, 2), 'ROOM-CUSTOM'), 2);
 assert.equal(
-  sandbox.getRoomBookingConflicts_('ROOM-YING', 'Crew_Practice', [
+  sandbox.getRoomBookingConflicts_(3, 'Crew_Practice', [
     { bookingId: 'B-1', bookingType: 'Crew_Practice' },
     { bookingId: 'B-2', bookingType: 'Crew_Practice' }
   ]).length,
   0
 );
 assert.equal(
-  sandbox.getRoomBookingConflicts_('ROOM-YING', 'Crew_Practice', [
+  sandbox.getRoomBookingConflicts_(3, 'Crew_Practice', [
     { bookingId: 'B-1', bookingType: 'Fixed_Class' }
   ]).length,
   1
 );
 
-console.log('Automation V1 smoke test passed.');
+assert.equal(sandbox.getRoomBookingConflicts_(1, 'Crew_Practice', [{bookingType:'Crew_Practice'}]).length, 1);
+assert.equal(sandbox.getRoomBookingConflicts_(2, 'Crew_Practice', [{bookingType:'Crew_Practice'}, {bookingType:'Crew_Practice'}]).length, 2);
+const duplicates = {getSheetByName: () => mockSheet(['Key','Value'], [['x','a'],['x','b']])};
+assert.throws(() => sandbox.studioSetting_(duplicates, 'x'), /exactly one/);
+const trialPayments = {getSheetByName: () => mockSheet(
+  ['Member_ID','Package_ID','Payment_Type','Payment_Status','Paid_Date','Amount_Paid'],
+  [['M-TEST','CUSTOM-TRIAL','Trial','Paid','2026-09-01',19]])};
+assert.equal(sandbox.findTrialPayment_(trialPayments, 'M-TEST', {packageId:'CUSTOM-TRIAL',amount:20}), null);
+assert.ok(sandbox.findTrialPayment_(trialPayments, 'M-TEST', {packageId:'CUSTOM-TRIAL',amount:19}));
+console.log('Automation smoke and studio configuration tests passed.');

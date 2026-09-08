@@ -4,6 +4,10 @@ Low-cost Google Sheets and Apps Script CRM/automation template for dance studios
 
 ## Current implementation status
 
+Configuration separation is implemented locally; live migration remains pending.
+See [configuration migration](apps-script/CONFIGURATION.md). Earlier demo successes do not
+establish production readiness; the migration document lists remaining reliability gaps.
+
 ### Done and tested in the Wolves workbook
 
 - Standard Google Sheets backend with controlled dropdowns, IDs, feature controls, owner-facing `START_HERE`, and operational tabs.

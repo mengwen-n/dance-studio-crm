@@ -6,6 +6,9 @@ Do **not** connect multiple studios to one live spreadsheet or one Apps Script p
 
 ## What is reusable vs studio-specific
 
+Read [CONFIGURATION.md](CONFIGURATION.md) before updating an existing studio. Prices, package
+selection and room sharing now come from workbook data via StudioSettings.gs.
+
 | Reusable code | Configure per studio in Google Sheets |
 | --- | --- |
 | Automation modules and safety checks | Studio name, rooms, class schedule, prices, packages, staff, members |

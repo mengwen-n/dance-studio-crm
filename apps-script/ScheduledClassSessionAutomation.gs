@@ -40,7 +40,7 @@ function runSevenDayClassSessionGenerator() {
       const classType = asText_(field('Class_Type'));
       const activeStatus = asText_(field('Active_Status')).toLowerCase();
       const recurringDay = asText_(field('Recurring_Day'));
-      const roomId = asText_(field('Room_ID')) || DANCE_STUDIO_CRM.DEFAULT_FIXED_CLASS_ROOM_ID;
+      const roomId = asText_(field('Room_ID')) || studioSetting_(spreadsheet, 'Default_Fixed_Class_Room_ID');
       const startTime = asText_(field('Start_Time'));
       const endTime = asText_(field('End_Time'));
       if (!classId || classType !== 'Fixed' || activeStatus !== 'active' || recurringDay !== targetDay) return;
